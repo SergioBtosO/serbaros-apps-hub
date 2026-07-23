@@ -1,0 +1,23 @@
+{
+  "hub": {
+    "name": "serbaros",
+    "tagline": "Panel de control de aplicaciones",
+    "logo": "/default-logo.svg"
+  },
+  "apps": [
+    {
+      "name": "Coolify",
+      "description": "Gestión y despliegue de contenedores en el VPS.",
+      "url": "https://coolify.apps.serbaros.com",
+      "logo": "https://coolify.io/favicon.svg",
+      "status": "online"
+    },
+    {
+      "name": "Fisio",
+      "description": "Plataforma de gestión de citas de fisioterapia para Sara.",
+      "url": "https://fisio.apps.serbaros.com",
+      "logo": "",
+      "status": "online"
+    }
+  ]
+}

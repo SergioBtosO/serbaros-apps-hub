@@ -1,0 +1,185 @@
+---
+import { hostnameOf } from '../lib/config';
+import type { AppEntry } from '../lib/config';
+
+interface Props {
+  app: AppEntry;
+  index: number;
+}
+const { app, index } = Astro.props;
+const initials = app.name.trim().slice(0, 2).toUpperCase();
+const port = String(index + 1).padStart(2, '0');
+---
+
+<a
+  class="card"
+  href={app.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  data-name={app.name.toLowerCase()}
+  data-description={app.description.toLowerCase()}
+>
+  <span class="corner tl" aria-hidden="true"></span>
+  <span class="corner tr" aria-hidden="true"></span>
+  <span class="corner bl" aria-hidden="true"></span>
+  <span class="corner br" aria-hidden="true"></span>
+
+  <div class="card-head">
+    <span class="port-no">PORT {port}</span>
+    <span class={`status status-${app.status ?? 'unknown'}`}>
+      <span class="dot" aria-hidden="true"></span>
+      {app.status === 'online' ? 'En línea' : app.status === 'offline' ? 'Fuera de línea' : 'Sin verificar'}
+    </span>
+  </div>
+
+  <div class="jack">
+    {app.logo
+      ? <img src={app.logo} alt="" loading="lazy" referrerpolicy="no-referrer" />
+      : <span class="initials">{initials}</span>}
+  </div>
+
+  <h2 class="name">{app.name}</h2>
+  {app.description && <p class="description">{app.description}</p>}
+
+  <div class="cable-label">
+    <span class="pin" aria-hidden="true"></span>
+    {hostnameOf(app.url)}
+  </div>
+</a>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--wire);
+    border-radius: 10px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--paper);
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+  }
+
+  .card:hover,
+  .card:focus-visible {
+    transform: translateY(-3px);
+    border-color: var(--signal-dim);
+    background: var(--panel-hover);
+  }
+
+  .card:hover .jack,
+  .card:focus-visible .jack {
+    border-color: var(--signal);
+  }
+
+  .corner {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--wire-bright);
+  }
+  .corner.tl { top: 8px; left: 8px; }
+  .corner.tr { top: 8px; right: 8px; }
+  .corner.bl { bottom: 8px; left: 8px; }
+  .corner.br { bottom: 8px; right: 8px; }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--mist);
+  }
+
+  .port-no {
+    text-transform: uppercase;
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--mist);
+  }
+  .status-online .dot {
+    background: var(--ok);
+    box-shadow: 0 0 6px var(--ok);
+  }
+  .status-offline .dot {
+    background: #e2685f;
+  }
+
+  .jack {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    background: var(--deck);
+    border: 1px solid var(--wire);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: border-color 160ms ease;
+  }
+
+  .jack img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+  }
+
+  .initials {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--signal);
+  }
+
+  .name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin: 0;
+  }
+
+  .description {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--mist);
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  .cable-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--signal);
+    border-top: 1px dashed var(--wire);
+    padding-top: 12px;
+    margin-top: 4px;
+    word-break: break-all;
+  }
+
+  .pin {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--signal);
+    flex-shrink: 0;
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Panel de control de aplicaciones' } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    /* Color tokens — patch-panel / server-rack palette */
+    --deck: #0f1417;
+    --panel: #161c20;
+    --panel-hover: #1b2227;
+    --wire: #2a3339;
+    --wire-bright: #3b464d;
+    --signal: #ff8a3d;
+    --signal-dim: #c96a2e;
+    --ok: #6fcf97;
+    --mist: #93a5ad;
+    --paper: #ecf2f3;
+
+    /* Type */
+    --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+    --font-body: 'Inter', 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--deck);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.035) 1px, transparent 0);
+    background-size: 28px 28px;
+    color: var(--paper);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>

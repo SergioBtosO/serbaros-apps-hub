@@ -1,0 +1,265 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppCard from '../components/AppCard.astro';
+import { loadConfig } from '../lib/config';
+
+const config = await loadConfig();
+const onlineCount = config.apps.filter((a) => a.status === 'online').length;
+const total = config.apps.length;
+---
+
+<Layout title={config.hub.name} description={config.hub.tagline}>
+  <main>
+    <header class="plaque">
+      <div class="plaque-left">
+        <div class="hub-logo">
+          {config.hub.logo
+            ? <img src={config.hub.logo} alt="" />
+            : <span>{config.hub.name.slice(0, 1).toUpperCase()}</span>}
+        </div>
+        <div>
+          <h1>{config.hub.name}</h1>
+          {config.hub.tagline && <p class="tagline">{config.hub.tagline}</p>}
+        </div>
+      </div>
+      {total > 0 && (
+        <div class="readout">
+          <span class="readout-value">{onlineCount}/{total}</span>
+          <span class="readout-label">en línea</span>
+        </div>
+      )}
+    </header>
+
+    {total > 0 && (
+      <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+          <line x1="16.65" y1="16.65" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <input
+          id="search"
+          type="text"
+          placeholder="Buscar aplicaciones..."
+          autocomplete="off"
+          aria-label="Buscar aplicaciones"
+        />
+      </div>
+    )}
+
+    {total === 0 ? (
+      <div class="empty">
+        <p>Sin aplicaciones conectadas.</p>
+        <p class="empty-sub">
+          Añade una entrada en <code>data/config.json</code> para que aparezca aquí.
+        </p>
+      </div>
+    ) : (
+      <>
+        <section class="grid" id="grid">
+          {config.apps.map((app, i) => <AppCard app={app} index={i} />)}
+        </section>
+        <p class="no-results" id="no-results" hidden>
+          Ninguna aplicación coincide con la búsqueda.
+        </p>
+      </>
+    )}
+  </main>
+</Layout>
+
+<style>
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .plaque {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-bottom: 28px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--wire);
+  }
+
+  .plaque-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .hub-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: var(--panel);
+    border: 1px solid var(--wire);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .hub-logo img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+  }
+
+  .hub-logo span {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--signal);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.7rem;
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+
+  .tagline {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--mist);
+    margin: 4px 0 0;
+  }
+
+  .readout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-family: var(--font-mono);
+  }
+
+  .readout-value {
+    font-size: 1.4rem;
+    color: var(--signal);
+    font-weight: 500;
+  }
+
+  .readout-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+
+  .search-wrap {
+    position: relative;
+    max-width: 420px;
+    margin-bottom: 32px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--mist);
+    pointer-events: none;
+  }
+
+  #search {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--wire);
+    border-radius: 8px;
+    padding: 11px 14px 11px 40px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--paper);
+    transition: border-color 160ms ease;
+  }
+
+  #search::placeholder {
+    color: var(--mist);
+  }
+
+  #search:focus {
+    outline: none;
+    border-color: var(--signal);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .empty {
+    padding: 64px 0;
+    text-align: center;
+    color: var(--mist);
+  }
+
+  .empty p:first-child {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--paper);
+    margin-bottom: 8px;
+  }
+
+  .empty-sub {
+    font-size: 0.88rem;
+  }
+
+  .empty code {
+    font-family: var(--font-mono);
+    background: var(--panel);
+    border: 1px solid var(--wire);
+    border-radius: 4px;
+    padding: 2px 6px;
+    color: var(--signal);
+  }
+
+  .no-results {
+    text-align: center;
+    color: var(--mist);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 40px 0;
+  }
+
+  @media (max-width: 480px) {
+    .plaque {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .readout {
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<script>
+  const input = document.getElementById('search') as HTMLInputElement | null;
+  const grid = document.getElementById('grid');
+  const noResults = document.getElementById('no-results');
+
+  if (input && grid) {
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>('.card'));
+
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      for (const card of cards) {
+        const matches =
+          card.dataset.name?.includes(query) || card.dataset.description?.includes(query);
+        card.style.display = matches ? '' : 'none';
+        if (matches) visibleCount++;
+      }
+
+      if (noResults) {
+        noResults.hidden = visibleCount !== 0;
+      }
+    });
+  }
+</script>

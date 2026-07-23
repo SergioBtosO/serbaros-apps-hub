@@ -1,0 +1,13 @@
+services:
+  apps-hub:
+    build: .
+    container_name: apps-hub
+    restart: unless-stopped
+    ports:
+      - '4321:4321'
+    volumes:
+      # Mount the config file so you can edit it on the server
+      # without rebuilding the image. Changes apply on the next request.
+      - ./data/config.json:/app/data/config.json
+    environment:
+      - CONFIG_PATH=/app/data/config.json

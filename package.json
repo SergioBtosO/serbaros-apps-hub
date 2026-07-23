@@ -1,0 +1,16 @@
+{
+  "name": "apps-hub",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs"
+  },
+  "dependencies": {
+    "@astrojs/node": "^8.3.4",
+    "astro": "^4.16.10"
+  }
+}
